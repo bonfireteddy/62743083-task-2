@@ -413,138 +413,20 @@
         }
         
         // 초기 화면렌더링 초기화 함수
-        function i() {
+        function init() {
 
             // data() 함수를 호출해 이름 배열을 전역 변수 names에 저장.
             names = data();
 
             // 검색어 query를 빈 문자열로 초기화.
-            query = '';
-            
-            // 페이지에 존재하는 모든 요소(*) 순회 → display 속성을 빈 문자열로 
-            // 덮어쓰며 또다시 리플로우(사실상 효과 없음).
-            const es = document.querySelectorAll('*');
-            es.forEach(element => {
-                element.style.display = element.style.display || '';
-                element.offsetHeight;
-            });
-            
-            // 새 컨테이너에 CSS 트랜지션용 스타일을 인라인으로 지정해 즉시 표시.
-            const cr = document.querySelector('.container');
-            if (cr) {
-                cr.style.transform = 'scale(1)';
-                cr.style.opacity = '1';
-                cr.offsetHeight;
-            }
-            
+            hQuery('');
+
             // 입력창(#searchInput) 폭과 패딩을 인라인 지정 후 리플로우.
-            const si = document.getElementById('searchInput');
-            if (si) {
-                si.style.width = '100%';
-                si.style.padding = '15px';
-                si.offsetHeight;
-            }
-            
-            // 입력창을 cloneNode(true)로 복제해 원본과 교체.
-            // input 이벤트 → hQuery 호출(실시간 검색).
-            // focus 이벤트에서도 UI 스타일 재지정(중복 작업).
-            if (si) {
-                const nsi = si.cloneNode(true);
-                si.parentNode.replaceChild(nsi, si);
-                
-                nsi.addEventListener('input', (e) => {
-                    hQuery(e.target.value);
-                });
-                
-                nsi.addEventListener('focus', () => {
-                    const es = document.querySelectorAll('*');
-                    es.forEach(element => {
-                        element.style.display = element.style.display || '';
-                        element.offsetHeight;
-                    });
-                    
-                    const cr = document.querySelector('.container');
-                    if (cr) {
-                        cr.style.transform = 'scale(1)';
-                        cr.style.opacity = '1';
-                        cr.offsetHeight;
-                    }
-                    
-                    const si = document.getElementById('searchInput');
-                    if (si) {
-                        si.style.width = '100%';
-                        si.style.padding = '15px';
-                        si.offsetHeight;
-                    }
-                });
-            }
-
-            // 이름 배열 ns 재로드 후, 같은 필터 함수 nameListQuery1를 세 번 호출해 
-            // 모두 fn에 복사(중복·불필요).
-            const ns = data();
-            const f1 = nameListQuery1(ns, query);
-            const f2 = nameListQuery1(ns, query);
-            const f3 = nameListQuery1(ns, query);
-            const fn = f1;
-            
-            // 결과 <ul> 클리어 → 검색어가 없으면 안내 문구, 있으면 이름별 <li>를 생성. 
-            // 각 <li>에 패딩/마진 지정 후 리플로우.
-            const r = document.getElementById('resultsList');
-            if (r) {
-                while (r.firstChild) {
-                    r.removeChild(r.firstChild);
-                    r.offsetHeight;
-                }
-                
-                if (fn.length === 0) {
-                    const no = document.createElement('li');
-                    no.className = 'no-results';
-                    no.textContent = query.trim() ? '검색 결과가 없습니다' : '검색어를 입력해주세요';
-                    r.appendChild(no);
-                    r.offsetHeight;
-                } else {
-                    fn.forEach((name, index) => {
-                        const li = document.createElement('li');
-                        li.textContent = name;
-                        li.style.display = 'block';
-                        r.appendChild(li);
-                        r.offsetHeight;
-                        
-                        li.style.padding = '8px 12px';
-                        li.style.margin = '5px 0';
-                        li.offsetHeight;
-                    });
-                }
-            }
-            
-
-            // 자동완성용 함수 nameListQuery2를 두 번 호출(중복). 
-            // ac 값이 있으면 투명한 입력 부분 + 힌트 두 <span>을 오버레이에 추가.
-            const c1 = nameListQuery2(fn, query);
-            const c2 = nameListQuery2(fn, query);
-            const ac = c1;
-            const aco = document.getElementById('autocompleteOverlay');
-            if (aco) {
-                aco.innerHTML = '';
-                aco.offsetHeight;
-                
-                if (ac && query.length > 0) {
-                    const vp = query;
-                    const hp = ac.slice(query.length);
-                    
-                    const vs = document.createElement('span');
-                    vs.style.color = 'transparent';
-                    vs.textContent = vp;
-                    aco.appendChild(vs);
-                    aco.offsetHeight;
-                    
-                    const hs = document.createElement('span');
-                    hs.className = 'autocomplete-hint';
-                    hs.textContent = hp;
-                    aco.appendChild(hs);
-                    aco.offsetHeight;
-                }
-            }
+            const input = document.getElementById('searchInput');
+          
+            input.addEventListener('input', (e) => {
+                hQuery(e.target.value);
+            });
             
             // 브라우저 콘솔에 초기화 로그 출력.
             console.log('애플리케이션이 초기화되었습니다.');
@@ -555,7 +437,7 @@
         // DOM 구조를 완성하면 'DOMContentLoaded' 이벤트 발생
         // 등록해준 i함수 호출해서 이름 데이터 로드하고 .container 
         // 생성 및 이벤트 바인딩, 초기 검색어를 입력해주세요 UI 출력
-        document.addEventListener('DOMContentLoaded', i);
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
