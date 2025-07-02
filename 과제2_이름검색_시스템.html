@@ -115,6 +115,19 @@
             font-size: 14px;
             color: #1976d2;
         }
+        /* 기존 안내 문장 */
+        .info-main {
+            margin: 0;          /* 기본 여백 제거 */
+            font-size: 14px;
+        }
+
+        /* 보조(서브) 문장 – 색·크기·들여쓰기 등을 따로 지정 */
+        .info-sub {
+            margin: 4px 0 0 0;  /* 위쪽에만 살짝 간격 */
+            font-size: 13px;    /* 살짝 작게 */
+            color: #888;        /* 회색 톤 */
+            text-indent: 1.8em;   /* 들여쓰기 효과 */
+        }
     </style>
 </head>
 <body>
@@ -122,7 +135,12 @@
         <h1>이름 검색 시스템</h1>
         
         <div class="info">
-            💡 이름을 입력하면 자동완성과 관련 결과를 확인할 수 있습니다.
+            <p class="info-main">
+                💡 이름을 입력하면 자동완성과 관련 결과를 확인할 수 있습니다.
+            </p>
+            <p class="info-sub">
+                *영문 이름만 검색 가능합니다
+            </p>
         </div>
 
         <div class="search-container">
@@ -183,7 +201,7 @@
         function hQuery(query) {
 
             // fdns에 필터 결과 저장.
-            const fdns = nameListQuery1(names, query.trim().toLowerCase());
+            const fdns = nameListQuery1(names, query);
             
             // 결과 리스트(<ul id="resultsList">)를 갱신. 1) 현 리스트 비우기 → 2) 
             // 결과가 없으면 “검색 결과가 없습니다/검색어를 입력해주세요” 메시지 추가, 
@@ -199,7 +217,7 @@
                     no1.className = 'no-results';
                     no1.textContent = query.trim() ? '검색 결과가 없습니다' : '검색어를 입력해주세요';
                     rll.appendChild(no1);  // DOM 변경 함수
-
+                    
                 } else {
                     fdns.forEach((name, index) => {
                         const li1 = document.createElement('li');
