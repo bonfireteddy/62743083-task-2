@@ -204,11 +204,24 @@
     <script>
         let names = [];
 
+        /* 10만개 테스트용 플래그 */
+        const USE_FAKE_100K = true;   // true → 100k 가짜 데이터
+
         // 이름 데이터 로딩 함수
         function data() {
             const csvData = `Alexander,Alice,Amanda,Andrew,Angela,Anna,Anthony,Ashley,Barbara,Benjamin,Betty,Brian,Carol,Charles,Christopher,Daniel,David,Deborah,Donald,Donna,Dorothy,Edward,Elizabeth,Emily,Emma,Eric,Frances,Frank,Gary,George,Helen,Henry,James,Jason,Jennifer,Jessica,John,Joseph,Joshua,Karen,Kimberly,Larry,Laura,Linda,Lisa,Margaret,Maria,Mark,Mary,Matthew,Michael,Michelle,Nancy,Nicole,Noah,Olivia,Patricia,Paul,Rachel,Rebecca,Richard,Robert,Ronald,Ruth,Sandra,Sarah,Scott,Sharon,Sophia,Stephen,Steven,Susan,Thomas,Timothy,Victoria,Virginia,Walter,Wayne,William,Abigail,Adam,Adrian,Albert,Andrea,Annie,Arthur,Austin,Brenda,Bruce,Carl,Catherine,Christine,Cynthia, Diane,Douglas,Eugene,Hannah,Harold,Isabella,Jack,Jacob,Jane,Janet,Jerry,Joan,Jonathan,Juan,Julie,Justin,Katherine,Keith,Kevin,Laura,Louis,Martha,Mason,Nathan,Noah,Peter,Ralph,Raymond,Roger,Ryan,Samantha,Sean,Shirley,Tyler,Virginia,Willie`;
-            
-            return csvData.split(',').map(name => name.trim());
+            const baseNames = csvData.split(',').map(n => n.trim());
+
+            /* 10만 개 테스트용 데이터 (Name1…Name100000) */
+            if (USE_FAKE_100K) {
+                const fake = Array.from({ length: 100000 }, (_, i) => `Name${i + 1}`);
+
+                /* ③ 두 배열 합치고 중복 제거 */
+                return [...new Set([...baseNames, ...fake])];
+            }
+
+            /* 평상시엔 기본 CSV만 */
+            return baseNames;
         }
 
         // query가 공백이 아니면 includes로 부분 일치하는 이름만 필터링
@@ -226,13 +239,9 @@
             const contains = []; // q 가 중간에 들어가는 이름 목록
 
             // 원본 배열을 한 번 순회
-            nameList.forEach(name => {
-                const lower = name.toLowerCase(); // 비교를 위해 소문자화
-                if (lower.startsWith(q)) {
-                starts.push(name);       // 앞쪽
-                } else if (lower.includes(q)) {
-                contains.push(name);     // 나머지
-                }
+            nameList.forEach(({ raw, lower }) => {
+                if (lower.startsWith(q))      starts.push(raw);
+                else if (lower.includes(q))   contains.push(raw);
             });
 
              // 그룹별 알파벳순 정렬 (대소문자 무시)
@@ -251,22 +260,19 @@
             // <ul> 요소
             const ul = document.getElementById('resultsList');
 
-            if (!query.trim()) {
-                // 검색어가 비어 있으면
-                ul.innerHTML = '<li class="no-results">검색어를 입력해주세요</li>';
-            } else if (fdns.length === 0) {
-                // 결과 없음
+            /* --- 렌더링: 상위 60개만 -------------------------------- */
+            const MAX = 60;
+            if (fdns.length === 0) {
                 ul.innerHTML = '<li class="no-results">검색 결과가 없습니다</li>';
             } else {
-                // 결과가 있을 때: 배열 → <li> 문자열 → join
-                ul.innerHTML = fdns
-                    .map(name => `<li class="item" data-name="${name}">${name}</li>`)
-                    .join('');
-            
+                const shown = fdns.slice(0, MAX);
+                ul.innerHTML =
+                shown.map(n => `<li class="item" data-name="${n}">${n}</li>`).join('') +
+                (fdns.length > MAX
+                    ? `<li class="no-results">외 ${fdns.length - MAX}개 더 있음…</li>`
+                    : '');
             }
             
-
-
              /* ---------- 자동완성 오버레이 ---------- */
             const overlay = document.getElementById('autocompleteOverlay');
             overlay.innerHTML = '';
@@ -308,17 +314,20 @@
         function init() {
 
             // data() 함수를 호출해 이름 배열을 전역 변수 names에 저장.
-            names = data();
-
+            names = data()
+                .map(n => ({ raw: n, lower: n.toLowerCase() }))      // ← 추가
+                .sort((a, b) => a.lower.localeCompare(b.lower));     // 정렬까지 미리
             // 검색어 query를 빈 문자열로 초기화.
             hQuery('');
 
             // 입력창(#searchInput) 폭과 패딩을 인라인 지정 후 리플로우.
             const input = document.getElementById('searchInput');
-          
-            input.addEventListener('input', (e) => {
-                hQuery(e.target.value);
-            });
+            
+            const debounce = (fn, d = 250) => {
+            let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), d); };
+            };
+
+            input.addEventListener('input', debounce(e => hQuery(e.target.value), 200));
             
             document.getElementById('resultsList').addEventListener('click', async e => {
                 const li = e.target.closest('.item');
