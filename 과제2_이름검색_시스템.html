@@ -201,27 +201,16 @@
     </script>
 
 
-    <script type="module">
-        /* CSV를 읽어 배열로 반환 */
-        async function loadCsv(path = 'names.csv') {
-        const res  = await fetch(path);
-        if (!res.ok) throw new Error('CSV 로드 실패');
-        const text = await res.text();
-        return text
-            .split(/[\n,]/)          // 콤마·줄바꿈 모두 분리자로 처리
-            .map(s => s.trim())
-            .filter(Boolean);
-        }
-
+    <script>
         let names = [];
 
         /* 10만개 테스트용 플래그 */
         const USE_FAKE_100K = true;   // true → 100k 가짜 데이터
 
         // 이름 데이터 로딩 함수
-        async function data() {
-            
-            const baseNames = await loadCsv();      // ▲ 외부 CSV 읽기
+        function data() {
+            const csvData = `Alexander,Alice,Amanda,Andrew,Angela,Anna,Anthony,Ashley,Barbara,Benjamin,Betty,Brian,Carol,Charles,Christopher,Daniel,David,Deborah,Donald,Donna,Dorothy,Edward,Elizabeth,Emily,Emma,Eric,Frances,Frank,Gary,George,Helen,Henry,James,Jason,Jennifer,Jessica,John,Joseph,Joshua,Karen,Kimberly,Larry,Laura,Linda,Lisa,Margaret,Maria,Mark,Mary,Matthew,Michael,Michelle,Nancy,Nicole,Noah,Olivia,Patricia,Paul,Rachel,Rebecca,Richard,Robert,Ronald,Ruth,Sandra,Sarah,Scott,Sharon,Sophia,Stephen,Steven,Susan,Thomas,Timothy,Victoria,Virginia,Walter,Wayne,William,Abigail,Adam,Adrian,Albert,Andrea,Annie,Arthur,Austin,Brenda,Bruce,Carl,Catherine,Christine,Cynthia, Diane,Douglas,Eugene,Hannah,Harold,Isabella,Jack,Jacob,Jane,Janet,Jerry,Joan,Jonathan,Juan,Julie,Justin,Katherine,Keith,Kevin,Laura,Louis,Martha,Mason,Nathan,Noah,Peter,Ralph,Raymond,Roger,Ryan,Samantha,Sean,Shirley,Tyler,Virginia,Willie`;
+            const baseNames = csvData.split(',').map(n => n.trim());
 
             /* 10만 개 테스트용 데이터 (Name1…Name100000) */
             if (USE_FAKE_100K) {
@@ -322,10 +311,10 @@
         }
 
         // 초기 화면렌더링 초기화 함수
-        async function init() {
+        function init() {
 
             // data() 함수를 호출해 이름 배열을 전역 변수 names에 저장.
-            names = (await data())                  // ← 여기만 변경
+            names = data()
                 .map(n => ({ raw: n, lower: n.toLowerCase() }))      // ← 추가
                 .sort((a, b) => a.lower.localeCompare(b.lower));     // 정렬까지 미리
             // 검색어 query를 빈 문자열로 초기화.
@@ -351,25 +340,21 @@
                     return;
                 }
                 showModal(detail);
-            }); 
+            });
 
 
             // 브라우저 콘솔에 초기화 로그 출력.
             console.log('애플리케이션이 초기화되었습니다.');
             console.log(`총 ${names.length}개의 이름이 로드되었습니다.`);
         }
-        /* 오류 표시용 */
-        init().catch(err => {
-            alert('CSV 로드에 실패했습니다. 콘솔을 확인하세요.');
-            console.error(err);
-        });
+        
         // 브라우저가 HTML 문서를 읽으면서 모든 태그를 파싱해
         // DOM 구조를 완성하면 'DOMContentLoaded' 이벤트 발생
         // 등록해준 i함수 호출해서 이름 데이터 로드하고 .container 
         // 생성 및 이벤트 바인딩, 초기 검색어를 입력해주세요 UI 출력
         document.addEventListener('DOMContentLoaded', init);
     </script>
-    <!--더미 API: 인물 상세 정보 JSON-->
+    <!-- ▼▼▼ 더미 API: 인물 상세 정보 JSON ▼▼▼ -->
     <script id="personDb" type="application/json">
     {
         "Alexander": { "id": 1,  "age": 46, "email": "alexander@example.com", "city": "Columbus" },
