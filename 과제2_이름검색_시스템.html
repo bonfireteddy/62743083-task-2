@@ -98,6 +98,12 @@
             border-left: 3px solid #4CAF50;
             color: #333;
             font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* 선택 사항: 살짝 배경 강조까지 함께 */
+        .results-list li:hover {
+            background:#e9f5ff;
         }
 
         .no-results {
@@ -290,6 +296,7 @@
         /* 모달 보여주기 */
         function showModal(detail) {
             const html = `
+                <p><strong>Id:</strong> ${detail.id}</p>
                 <p><strong>Age:</strong> ${detail.age}</p>
                 <p><strong>Email:</strong> ${detail.email}</p>
                 <p><strong>City:</strong> ${detail.city}</p>`;
@@ -341,18 +348,134 @@
     <!-- ▼▼▼ 더미 API: 인물 상세 정보 JSON ▼▼▼ -->
     <script id="personDb" type="application/json">
     {
-        "Alice": {
-            "age":   28,
-            "email": "alice@example.com",
-            "city":  "Seattle"
-        },
-        "Alexander": {
-            "age":   30,
-            "email": "alex@example.com",
-            "city":  "New York"
-        }
-
+        "Alexander": { "id": 1,  "age": 46, "email": "alexander@example.com", "city": "Columbus" },
+        "Alice":     { "id": 2,  "age": 24, "email": "alice@example.com",     "city": "Dallas" },
+        "Amanda":    { "id": 3,  "age": 54, "email": "amanda@example.com",    "city": "Phoenix" },
+        "Andrew":    { "id": 4,  "age": 51, "email": "andrew@example.com",    "city": "Jacksonville" },
+        "Angela":    { "id": 5,  "age": 37, "email": "angela@example.com",    "city": "San Francisco" },
+        "Anna":      { "id": 6,  "age": 33, "email": "anna@example.com",      "city": "Seattle" },
+        "Anthony":   { "id": 7,  "age": 54, "email": "anthony@example.com",   "city": "Los Angeles" },
+        "Ashley":    { "id": 8,  "age": 40, "email": "ashley@example.com",    "city": "Phoenix" },
+        "Barbara":   { "id": 9,  "age": 28, "email": "barbara@example.com",   "city": "Washington" },
+        "Benjamin":  { "id": 10, "age": 56, "email": "benjamin@example.com",  "city": "Houston" },
+        "Betty":     { "id": 11, "age": 54, "email": "betty@example.com",     "city": "Austin" },
+        "Brian":     { "id": 12, "age": 55, "email": "brian@example.com",     "city": "Indianapolis" },
+        "Carol":     { "id": 13, "age": 36, "email": "carol@example.com",     "city": "Fort Worth" },
+        "Charles":   { "id": 14, "age": 55, "email": "charles@example.com",   "city": "Columbus" },
+        "Christopher":{ "id": 15, "age": 52, "email": "christopher@example.com","city": "Dallas" },
+        "Daniel":    { "id": 16, "age": 38, "email": "daniel@example.com",    "city": "New York" },
+        "David":     { "id": 17, "age": 59, "email": "david@example.com",     "city": "Seattle" },
+        "Deborah":   { "id": 18, "age": 42, "email": "deborah@example.com",   "city": "San Diego" },
+        "Donald":    { "id": 19, "age": 60, "email": "donald@example.com",    "city": "Houston" },
+        "Donna":     { "id": 20, "age": 55, "email": "donna@example.com",     "city": "San Antonio" },
+        "Dorothy":   { "id": 21, "age": 24, "email": "dorothy@example.com",   "city": "Chicago" },
+        "Edward":    { "id": 22, "age": 40, "email": "edward@example.com",    "city": "Phoenix" },
+        "Elizabeth": { "id": 23, "age": 39, "email": "elizabeth@example.com", "city": "Los Angeles" },
+        "Emily":     { "id": 24, "age": 37, "email": "emily@example.com",     "city": "Denver" },
+        "Emma":      { "id": 25, "age": 29, "email": "emma@example.com",      "city": "Austin" },
+        "Eric":      { "id": 26, "age": 45, "email": "eric@example.com",      "city": "Philadelphia" },
+        "Frances":   { "id": 27, "age": 33, "email": "frances@example.com",   "city": "San Jose" },
+        "Frank":     { "id": 28, "age": 40, "email": "frank@example.com",     "city": "Dallas" },
+        "Gary":      { "id": 29, "age": 45, "email": "gary@example.com",      "city": "Washington" },
+        "George":    { "id": 30, "age": 22, "email": "george@example.com",    "city": "Columbus" },
+        "Helen":     { "id": 31, "age": 41, "email": "helen@example.com",     "city": "Houston" },
+        "Henry":     { "id": 32, "age": 60, "email": "henry@example.com",     "city": "Indianapolis" },
+        "James":     { "id": 33, "age": 34, "email": "james@example.com",     "city": "Seattle" },
+        "Jason":     { "id": 34, "age": 40, "email": "jason@example.com",     "city": "San Jose" },
+        "Jennifer":  { "id": 35, "age": 53, "email": "jennifer@example.com",  "city": "Phoenix" },
+        "Jessica":   { "id": 36, "age": 51, "email": "jessica@example.com",   "city": "Chicago" },
+        "John":      { "id": 37, "age": 46, "email": "john@example.com",      "city": "San Francisco" },
+        "Joseph":    { "id": 38, "age": 22, "email": "joseph@example.com",    "city": "Charlotte" },
+        "Joshua":    { "id": 39, "age": 55, "email": "joshua@example.com",    "city": "Denver" },
+        "Karen":     { "id": 40, "age": 29, "email": "karen@example.com",     "city": "Jacksonville" },
+        "Kimberly":  { "id": 41, "age": 30, "email": "kimberly@example.com",  "city": "Los Angeles" },
+        "Larry":     { "id": 42, "age": 41, "email": "larry@example.com",     "city": "Dallas" },
+        "Laura":     { "id": 43, "age": 24, "email": "laura@example.com",     "city": "Fort Worth" },
+        "Linda":     { "id": 44, "age": 46, "email": "linda@example.com",     "city": "Phoenix" },
+        "Lisa":      { "id": 45, "age": 57, "email": "lisa@example.com",      "city": "Houston" },
+        "Margaret":  { "id": 46, "age": 37, "email": "margaret@example.com",  "city": "Philadelphia" },
+        "Maria":     { "id": 47, "age": 27, "email": "maria@example.com",     "city": "Columbus" },
+        "Mark":      { "id": 48, "age": 37, "email": "mark@example.com",      "city": "San Jose" },
+        "Mary":      { "id": 49, "age": 46, "email": "mary@example.com",      "city": "Seattle" },
+        "Matthew":   { "id": 50, "age": 47, "email": "matthew@example.com",   "city": "Chicago" },
+        "Michael":   { "id": 51, "age": 22, "email": "michael@example.com",   "city": "Denver" },
+        "Michelle":  { "id": 52, "age": 38, "email": "michelle@example.com",  "city": "Austin" },
+        "Nancy":     { "id": 53, "age": 44, "email": "nancy@example.com",     "city": "New York" },
+        "Nicole":    { "id": 54, "age": 27, "email": "nicole@example.com",    "city": "Columbus" },
+        "Noah":      { "id": 55, "age": 40, "email": "noah@example.com",      "city": "Houston" },
+        "Olivia":    { "id": 56, "age": 31, "email": "olivia@example.com",    "city": "San Diego" },
+        "Patricia":  { "id": 57, "age": 51, "email": "patricia@example.com",  "city": "Austin" },
+        "Paul":      { "id": 58, "age": 55, "email": "paul@example.com",      "city": "San Francisco" },
+        "Rachel":    { "id": 59, "age": 28, "email": "rachel@example.com",    "city": "Jacksonville" },
+        "Rebecca":   { "id": 60, "age": 55, "email": "rebecca@example.com",   "city": "Indianapolis" },
+        "Richard":   { "id": 61, "age": 38, "email": "richard@example.com",   "city": "Charlotte" },
+        "Robert":    { "id": 62, "age": 25, "email": "robert@example.com",    "city": "Phoenix" },
+        "Ronald":    { "id": 63, "age": 48, "email": "ronald@example.com",    "city": "Dallas" },
+        "Ruth":      { "id": 64, "age": 57, "email": "ruth@example.com",      "city": "Washington" },
+        "Sandra":    { "id": 65, "age": 52, "email": "sandra@example.com",    "city": "Houston" },
+        "Sarah":     { "id": 66, "age": 50, "email": "sarah@example.com",     "city": "Denver" },
+        "Scott":     { "id": 67, "age": 48, "email": "scott@example.com",     "city": "San Jose" },
+        "Sharon":    { "id": 68, "age": 23, "email": "sharon@example.com",    "city": "Fort Worth" },
+        "Sophia":    { "id": 69, "age": 49, "email": "sophia@example.com",    "city": "Columbus" },
+        "Stephen":   { "id": 70, "age": 41, "email": "stephen@example.com",   "city": "Austin" },
+        "Steven":    { "id": 71, "age": 24, "email": "steven@example.com",    "city": "Chicago" },
+        "Susan":     { "id": 72, "age": 43, "email": "susan@example.com",     "city": "Denver" },
+        "Thomas":    { "id": 73, "age": 58, "email": "thomas@example.com",    "city": "Phoenix" },
+        "Timothy":   { "id": 74, "age": 23, "email": "timothy@example.com",   "city": "Seattle" },
+        "Victoria":  { "id": 75, "age": 49, "email": "victoria@example.com",  "city": "Indianapolis" },
+        "Virginia":  { "id": 76, "age": 54, "email": "virginia@example.com",  "city": "San Francisco" },
+        "Walter":    { "id": 77, "age": 40, "email": "walter@example.com",    "city": "Los Angeles" },
+        "Wayne":     { "id": 78, "age": 30, "email": "wayne@example.com",     "city": "Austin" },
+        "William":   { "id": 79, "age": 50, "email": "william@example.com",   "city": "Chicago" },
+        "Abigail":   { "id": 80, "age": 47, "email": "abigail@example.com",   "city": "Houston" },
+        "Adam":      { "id": 81, "age": 40, "email": "adam@example.com",      "city": "Phoenix" },
+        "Adrian":    { "id": 82, "age": 47, "email": "adrian@example.com",    "city": "San Jose" },
+        "Albert":    { "id": 83, "age": 55, "email": "albert@example.com",    "city": "Houston" },
+        "Andrea":    { "id": 84, "age": 36, "email": "andrea@example.com",    "city": "Austin" },
+        "Annie":     { "id": 85, "age": 59, "email": "annie@example.com",     "city": "Jacksonville" },
+        "Arthur":    { "id": 86, "age": 30, "email": "arthur@example.com",    "city": "Seattle" },
+        "Austin":    { "id": 87, "age": 36, "email": "austin@example.com",    "city": "Columbus" },
+        "Brenda":    { "id": 88, "age": 52, "email": "brenda@example.com",    "city": "Dallas" },
+        "Bruce":     { "id": 89, "age": 27, "email": "bruce@example.com",     "city": "Denver" },
+        "Carl":      { "id": 90, "age": 45, "email": "carl@example.com",      "city": "Indianapolis" },
+        "Catherine": { "id": 91, "age": 39, "email": "catherine@example.com", "city": "San Francisco" },
+        "Christine": { "id": 92, "age": 50, "email": "christine@example.com", "city": "San Diego" },
+        "Cynthia":   { "id": 93, "age": 49, "email": "cynthia@example.com",   "city": "Fort Worth" },
+        "Diane":     { "id": 94, "age": 25, "email": "diane@example.com",     "city": "Chicago" },
+        "Douglas":   { "id": 95, "age": 27, "email": "douglas@example.com",   "city": "Phoenix" },
+        "Eugene":    { "id": 96, "age": 23, "email": "eugene@example.com",    "city": "Austin" },
+        "Hannah":    { "id": 97, "age": 22, "email": "hannah@example.com",    "city": "Denver" },
+        "Harold":    { "id": 98, "age": 30, "email": "harold@example.com",    "city": "Seattle" },
+        "Isabella":  { "id": 99, "age": 43, "email": "isabella@example.com",  "city": "Jacksonville" },
+        "Jack":      { "id": 100,"age": 25, "email": "jack@example.com",      "city": "San Jose" },
+        "Jacob":     { "id": 101,"age": 56, "email": "jacob@example.com",     "city": "Houston" },
+        "Jane":      { "id": 102,"age": 37, "email": "jane@example.com",      "city": "New York" },
+        "Janet":     { "id": 103,"age": 29, "email": "janet@example.com",     "city": "Columbus" },
+        "Jerry":     { "id": 104,"age": 49, "email": "jerry@example.com",     "city": "Austin" },
+        "Joan":      { "id": 105,"age": 46, "email": "joan@example.com",      "city": "Fort Worth" },
+        "Jonathan":  { "id": 106,"age": 60, "email": "jonathan@example.com",  "city": "Chicago" },
+        "Juan":      { "id": 107,"age": 33, "email": "juan@example.com",      "city": "San Antonio" },
+        "Julie":     { "id": 108,"age": 23, "email": "julie@example.com",     "city": "San Diego" },
+        "Justin":    { "id": 109,"age": 41, "email": "justin@example.com",    "city": "Denver" },
+        "Katherine": { "id": 110,"age": 38, "email": "katherine@example.com", "city": "Phoenix" },
+        "Keith":     { "id": 111,"age": 32, "email": "keith@example.com",     "city": "Indianapolis" },
+        "Kevin":     { "id": 112,"age": 23, "email": "kevin@example.com",     "city": "Charlotte" },
+        "Louis":     { "id": 113,"age": 29, "email": "louis@example.com",     "city": "Indianapolis" },
+        "Martha":    { "id": 114,"age": 34, "email": "martha@example.com",    "city": "Columbus" },
+        "Mason":     { "id": 115,"age": 55, "email": "mason@example.com",     "city": "Chicago" },
+        "Nathan":    { "id": 116,"age": 29, "email": "nathan@example.com",    "city": "San Francisco" },
+        "Peter":     { "id": 117,"age": 25, "email": "peter@example.com",     "city": "San Jose" },
+        "Ralph":     { "id": 118,"age": 42, "email": "ralph@example.com",     "city": "Washington" },
+        "Raymond":   { "id": 119,"age": 52, "email": "raymond@example.com",   "city": "Dallas" },
+        "Roger":     { "id": 120,"age": 31, "email": "roger@example.com",     "city": "Denver" },
+        "Ryan":      { "id": 121,"age": 32, "email": "ryan@example.com",      "city": "Seattle" },
+        "Samantha":  { "id": 122,"age": 27, "email": "samantha@example.com",  "city": "Austin" },
+        "Sean":      { "id": 123,"age": 59, "email": "sean@example.com",      "city": "Jacksonville" },
+        "Shirley":   { "id": 124,"age": 33, "email": "shirley@example.com",   "city": "Phoenix" },
+        "Tyler":     { "id": 125,"age": 24, "email": "tyler@example.com",     "city": "San Francisco" },
+        "Willie":    { "id": 126,"age": 42, "email": "willie@example.com",    "city": "San Jose" }
     }
+
     </script>
 </body>
 </html>
