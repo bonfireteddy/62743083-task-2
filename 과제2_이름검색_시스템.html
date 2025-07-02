@@ -181,127 +181,12 @@
 
         // 핵심 로직 처리 함수(input 입력 시마다 호출)
         function hQuery(query) {
-            const b = document.body;
-
-            // 현재 화면 전체 container 요소를 찾음
-            const c1 = document.querySelector('.container');
-
-            // 그 전채 container를 DOM트리에서 제거 -> 기존 화면 통째로 삭제
-            b.removeChild(c1);
-            
-            // 강제로 리플로우 유도하기 위해 offsetHeight 읽음.
-            b.offsetHeight;
-            
-            // 새로운 .container div를 만들고, HTML 템플릿을 그대로 
-            // innerHTML로 삽입. 여기서 value="${query}"로 기존 입력값을 유지.
-            const c2 = document.createElement('div');
-            c2.className = 'container';
-            c2.innerHTML = `
-                <h1>이름 검색 시스템</h1>
-                
-                <div class="info">
-                    💡 이름을 입력하면 자동완성과 관련 결과를 확인할 수 있습니다.
-                </div>
-
-                <div class="search-container">
-                    <div id="autocompleteOverlay" class="autocomplete-overlay"></div>
-                    <input 
-                        type="text" 
-                        id="searchInput" 
-                        placeholder="이름을 입력하세요..."
-                        autocomplete="off"
-                        value="${query}"
-                    >
-                </div>
-
-                <div class="results-container">
-                    <div class="results-title">검색 결과:</div>
-                    <ul id="resultsList" class="results-list">
-                        <li class="no-results">검색어를 입력해주세요</li>
-                    </ul>
-                </div>
-            `;
-            
-            // 여기 이 부분에서 입력이 될 때마다 현재 화면 그대로 HTML템플릿이
-            // 입력되고 그대로 기존 입력값이 유지시키기 때문에 입력하면 멈추고
-            // 입력하면 멈추고 다시 입력해야되는 현상 발생 => 이 부분이 통째로 없어져도 되나?    
-            
-            // 새로 만든 컨테이너를 <body> 마지막에 삽입.
-            b.appendChild(c2);
-
-            // 다시 리플로우 강제.
-            b.offsetHeight;
-            
-            // 페이지의 모든 요소(*)를 순회하면서 display가 비어 있으면 
-            // 빈 문자열('') 지정 후 또다시 리플로우. 사실상 효과 없음.
-            const ales = document.querySelectorAll('*');
-            ales.forEach(element => {
-                element.style.display = element.style.display || '';
-                element.offsetHeight;
-            });
-            
-            // 방금 삽입한 .container에 
-            // CSS 트랜지션용 스타일(transform, opacity)을 지정해 즉시 보이도록 함.
-            const crr = document.querySelector('.container');
-            if (crr) {
-                crr.style.transform = 'scale(1)';
-                crr.style.opacity = '1';
-                crr.offsetHeight;
-            }
-            
-            // 새 입력창(searchInput) 참조를 가져옴.
-            // 입력창 폭과 패딩을 인라인으로 지정하고 리플로우.
-            const sii = document.getElementById('searchInput');
-            if (sii) { // 요소가 존재할 때만 아래 수행.
-                sii.style.width = '100%';
-                sii.style.padding = '15px';
-                sii.offsetHeight;
-            }
-            
-            // 입력창을 클론→ 원본과 교체 후, 이벤트 리스너 2개 등록. 
-            // input 이벤트가 발생하면 재귀적으로 hQuery 호출(실시간 검색). 
-            // 포커스 시 UI 스타일을 다시 강제 적용.
-            if (sii) {
-                const nsi = sii.cloneNode(true);
-                sii.parentNode.replaceChild(nsi, sii);
-                
-                nsi.addEventListener('input', (e) => {
-                    hQuery(e.target.value);
-                });
-                
-                nsi.addEventListener('focus', () => {
-                    const aes = document.querySelectorAll('*');
-                    aes.forEach(element => {
-                        element.style.display = element.style.display || '';
-                        element.offsetHeight;
-                    });
-                    
-                    const cr1 = document.querySelector('.container');
-                    if (cr1) {
-                        cr1.style.transform = 'scale(1)';
-                        cr1.style.opacity = '1';
-                        cr1.offsetHeight;
-                    }
-                    
-                    const sii1 = document.getElementById('searchInput');
-                    if (sii1) {
-                        sii1.style.width = '100%';
-                        sii1.style.padding = '15px';
-                        sii1.offsetHeight;
-                    }
-                });
-            }
             
             // data() 호출 → 전체 이름 배열 얻음.
             const ffns = data();
 
-            // 같은 필터 함수 nameListQuery1를 3번 호출해 중복 결과 생성(효과적으로 불필요).
-            const fd1 = nameListQuery1(ffns, query);
-            const fd2 = nameListQuery1(ffns, query);
-            const fd3 = nameListQuery1(ffns, query);
-            
             // fdns에 필터 결과(fd1) 저장.
-            const fdns = fd1;
+            const fdns = nameListQuery1(ffns, query);
             
             // 결과 리스트(<ul id="resultsList">)를 갱신. 1) 현 리스트 비우기 → 2) 
             // 결과가 없으면 “검색 결과가 없습니다/검색어를 입력해주세요” 메시지 추가, 
@@ -334,10 +219,8 @@
                 }
             }
             
-            // 자동완성용 nameListQuery2를 2번 호출 후 하나(acc)만 사용.
-            const acc1 = nameListQuery2(ffns, query);
-            const acc2 = nameListQuery2(ffns, query);
-            const acc = acc1;
+            // 자동완성용 nameListQuery2를 하나(acc)만 사용.
+            const acc = nameListQuery2(ffns, query);
 
             // 자동완성 오버레이(<div id="autocompleteOverlay">) 초기화 후, 
             // acc가 존재하면 투명한 입력 부분 + 힌트 부분 두 조각의 <span>을 
