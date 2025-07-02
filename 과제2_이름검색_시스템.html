@@ -128,6 +128,26 @@
             color: #888;        /* 회색 톤 */
             text-indent: 1.8em;   /* 들여쓰기 효과 */
         }
+        /* 모달 중앙 배치 스타일 */
+        #detailModal[open] {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 90%;
+        max-height: 80vh;
+        overflow: auto;
+        padding: 20px;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        }
+
+        /* 모달 뒷배경 딤 효과 */
+        #detailModal::backdrop {
+        background: rgba(0, 0, 0, 0.35);
+        }
+
     </style>
 </head>
 <body>
@@ -160,6 +180,20 @@
             </ul>
         </div>
     </div>
+
+    <!-- ▼ 상세 정보를 보여줄 모달(dialog) -->
+    <dialog id="detailModal">
+        <div id="modalBody"></div>
+        <button id="closeBtn" style="margin-top:12px;">닫기</button>
+    </dialog>
+
+
+    <script>
+        // 모달 닫기 버튼
+        document.getElementById('closeBtn').onclick =
+            () => document.getElementById('detailModal').close();
+    </script>
+
 
     <script>
         let names = [];
@@ -212,18 +246,21 @@
             const ul = document.getElementById('resultsList');
 
             if (!query.trim()) {
-            // 검색어가 비어 있으면
-            ul.innerHTML = '<li class="no-results">검색어를 입력해주세요</li>';
+                // 검색어가 비어 있으면
+                ul.innerHTML = '<li class="no-results">검색어를 입력해주세요</li>';
             } else if (fdns.length === 0) {
-            // 결과 없음
-            ul.innerHTML = '<li class="no-results">검색 결과가 없습니다</li>';
+                // 결과 없음
+                ul.innerHTML = '<li class="no-results">검색 결과가 없습니다</li>';
             } else {
-            // 결과가 있을 때: 배열 → <li> 문자열 → join
-            ul.innerHTML = fdns
-                .map(name => `<li>${name}</li>`)
-                .join('');
+                // 결과가 있을 때: 배열 → <li> 문자열 → join
+                ul.innerHTML = fdns
+                    .map(name => `<li class="item" data-name="${name}">${name}</li>`)
+                    .join('');
+            
             }
             
+
+
              /* ---------- 자동완성 오버레이 ---------- */
             const overlay = document.getElementById('autocompleteOverlay');
             overlay.innerHTML = '';
@@ -243,6 +280,23 @@
             }
         }
         
+        /* 상세 정보 가져오는 더미 API */
+        async function fetchPersonDetail(name) {
+            const raw = document.getElementById('personDb').textContent;
+            const db  = JSON.parse(raw);
+            return db[name] || null;     // 없으면 null
+        }
+
+        /* 모달 보여주기 */
+        function showModal(detail) {
+            const html = `
+                <p><strong>Age:</strong> ${detail.age}</p>
+                <p><strong>Email:</strong> ${detail.email}</p>
+                <p><strong>City:</strong> ${detail.city}</p>`;
+            document.getElementById('modalBody').innerHTML = html;
+            document.getElementById('detailModal').showModal();
+        }
+
         // 초기 화면렌더링 초기화 함수
         function init() {
 
@@ -259,6 +313,20 @@
                 hQuery(e.target.value);
             });
             
+            document.getElementById('resultsList').addEventListener('click', async e => {
+                const li = e.target.closest('.item');
+                if (!li) return;
+
+                const name = li.dataset.name;
+                const detail = await fetchPersonDetail(name);
+                if (!detail) {
+                    alert('해당 인물 정보가 없습니다.');
+                    return;
+                }
+                showModal(detail);
+            });
+
+
             // 브라우저 콘솔에 초기화 로그 출력.
             console.log('애플리케이션이 초기화되었습니다.');
             console.log(`총 ${names.length}개의 이름이 로드되었습니다.`);
@@ -269,6 +337,22 @@
         // 등록해준 i함수 호출해서 이름 데이터 로드하고 .container 
         // 생성 및 이벤트 바인딩, 초기 검색어를 입력해주세요 UI 출력
         document.addEventListener('DOMContentLoaded', init);
+    </script>
+    <!-- ▼▼▼ 더미 API: 인물 상세 정보 JSON ▼▼▼ -->
+    <script id="personDb" type="application/json">
+    {
+        "Alice": {
+            "age":   28,
+            "email": "alice@example.com",
+            "city":  "Seattle"
+        },
+        "Alexander": {
+            "age":   30,
+            "email": "alex@example.com",
+            "city":  "New York"
+        }
+
+    }
     </script>
 </body>
 </html>
