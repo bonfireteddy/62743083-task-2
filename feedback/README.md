@@ -15,8 +15,8 @@
 - 별도 서버 설치 없이 실행 가능 (정적 HTML)
 
 ### 2. 실행 방법
-1. `index.html` 파일을 브라우저에서 더블 클릭하여 실행
-2. 검색창에 이름 입력
+1. `과제2_이름검색_시스템.html` 파일을 브라우저에서 더블 클릭하여 실행
+2. 검색창에 이름 입력(ex. Alice or Name - 더미데이터로 들어간 100000개 확인가능)
 3. 자동완성과 결과 리스트가 실시간 갱신됨
 <br>
 <br>
@@ -157,12 +157,7 @@ setTimeout(() => { … }, 5);
 
 </details>
 
-아래 블록을 그대로 README .md 에 붙여 넣으면, **주요 리팩터링 포인트 3가지**를 “Before / After” 형식으로 한눈에 보여줄 수 있습니다.
-(코드 블록 안의 `…` 은 실제 프로젝트 코드에 맞게 살짝만 조정-보완해 주세요.)
-
----
-
-### 5. 상세 정보 모달 + 더미 API 도입 <!-- 번호는 예시, 필요하면 조정 -->
+### 5. 상세 정보 모달 + 더미 API 도입 
 
 <details>
 <summary><strong>Before</strong></summary>
@@ -209,7 +204,7 @@ resultsList.addEventListener('click', async e => {
 
 </details>
 
----
+
 
 ### 6. 이름 데이터 **100 → 100 000** 확장 대응
 | 지표 | 100 개 | **100 k (최적화 전)** | **100 k (최적화 후)** |
@@ -257,7 +252,7 @@ searchInput.addEventListener('input', debounce(e => hQuery(e.target.value), 200)
 
 </details>
 
----
+
 
 ### 7. 하드코딩 이름 → **외부 CSV + Fallback** 으로 분리
 
@@ -305,10 +300,6 @@ const rawNames = await loadCsv();  // 모듈 스크립트에서 await 가능
 > • **FPS 55↑ 유지** <br>
 > • 최종 HTML 단일 파일만 더블클릭해도 정상 동작 
 -> 분리한 구조에서 동작확인은 closes #7파일에서 LiveServer로 Open하여 확인 가능 
-
-
-필요한 구간에 설명을 조금 더 첨가하면 완성된 README 섹션으로 바로 활용할 수 있습니다!
-
 
 <br>
 
