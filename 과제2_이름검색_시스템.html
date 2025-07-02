@@ -259,8 +259,8 @@
             }
             
             // 입력창을 클론→ 원본과 교체 후, 이벤트 리스너 2개 등록. 
-            // ① input 이벤트가 발생하면 재귀적으로 hQuery 호출(실시간 검색). 
-            // ② 포커스 시 UI 스타일을 다시 강제 적용.
+            // input 이벤트가 발생하면 재귀적으로 hQuery 호출(실시간 검색). 
+            // 포커스 시 UI 스타일을 다시 강제 적용.
             if (sii) {
                 const nsi = sii.cloneNode(true);
                 sii.parentNode.replaceChild(nsi, sii);
@@ -412,7 +412,7 @@
             }, 5);
         }
         
-        
+        // 초기 화면렌더링 초기화 함수
         function i() {
 
             // data() 함수를 호출해 이름 배열을 전역 변수 names에 저장.
@@ -420,47 +420,6 @@
 
             // 검색어 query를 빈 문자열로 초기화.
             query = '';
-            
-            // 기존 .container를 찾아서 body에서 제거하고, offsetHeight 읽어 
-            // 강제 리플로우를 일으킴.
-            const bb = document.body;
-            const cc1 = document.querySelector('.container');
-            bb.removeChild(cc1);
-            bb.offsetHeight;
-            
-            // 새 .container 요소를 만들고 HTML 템플릿 삽입. 
-            // value="${query}"로 초기 검색어(빈 문자열) 지정.
-            const cc2 = document.createElement('div');
-            cc2.className = 'container';
-            cc2.innerHTML = `
-                <h1>이름 검색 시스템</h1>
-                
-                <div class="info">
-                    💡 이름을 입력하면 자동완성과 관련 결과를 확인할 수 있습니다.
-                </div>
-
-                <div class="search-container">
-                    <div id="autocompleteOverlay" class="autocomplete-overlay"></div>
-                    <input 
-                        type="text" 
-                        id="searchInput" 
-                        placeholder="이름을 입력하세요..."
-                        autocomplete="off"
-                        value="${query}"
-                    >
-                </div>
-
-                <div class="results-container">
-                    <div class="results-title">검색 결과:</div>
-                    <ul id="resultsList" class="results-list">
-                        <li class="no-results">검색어를 입력해주세요</li>
-                    </ul>
-                </div>
-            `;
-            
-            // 새 컨테이너를 <body>에 붙이고 다시 리플로우.
-            bb.appendChild(cc2);
-            bb.offsetHeight;
             
             // 페이지에 존재하는 모든 요소(*) 순회 → display 속성을 빈 문자열로 
             // 덮어쓰며 또다시 리플로우(사실상 효과 없음).
