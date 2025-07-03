@@ -1,11 +1,9 @@
 # 62743083-task-2 이름 검색 시스템
 
-
-
 ## 👨‍💻 지원자 정보
 - 이름: 윤태섭
-- 포지션: Android / 앱 개발자 지망
-- 사용 기술: Java, Kotlin, Android
+- 포지션: ICT 개발 지원
+- 프로젝트 사용 기술: HTML, CSS, JavaScript
 <br>
 
 ## 💻프로젝트 실행 방법
