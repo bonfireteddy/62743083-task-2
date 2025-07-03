@@ -44,8 +44,7 @@
 
 ### 1. 입력창 리스너
 
-<details>
-<summary><strong>Before</strong></summary>
+<strong>Before</strong>
 
 ```js
 const sii = document.getElementById('searchInput');
@@ -54,24 +53,15 @@ sii.parentNode.replaceChild(nsi, sii);
 nsi.addEventListener('input', e => hQuery(e.target.value));
 ```
 
-</details>
-
-<details>
-<summary><strong>After</strong></summary>
+<strong>After</strong>
 
 ```js
 const input = document.getElementById('searchInput');
 input.addEventListener('input', e => hQuery(e.target.value));
 ```
 
-</details>
-
-
-
 ### 2. 결과 리스트 렌더링
-
-<details>
-<summary><strong>Before</strong></summary>
+<strong>Before</strong>
 
 ```js
 while (ul.firstChild) ul.removeChild(ul.firstChild);
@@ -81,11 +71,7 @@ fdns.forEach(name => {
   ul.appendChild(li);
 });
 ```
-
-</details>
-
-<details>
-<summary><strong>After</strong></summary>
+<strong>After</strong>
 
 ```js
 ul.innerHTML = fdns.length
@@ -93,14 +79,8 @@ ul.innerHTML = fdns.length
   : `<li class="no-results">검색 결과가 없습니다</li>`;
 ```
 
-</details>
-
-
-
 ### 3. 자동완성 힌트 처리
-
-<details>
-<summary><strong>Before (별도 탐색)</strong></summary>
+<strong>Before (별도 탐색)</strong>
 
 ```js
 const acc = nameListQuery2(names, query);
@@ -112,11 +92,7 @@ if (acc && query) {
     `<span class="autocomplete-hint">${hp1}</span>`;
 }
 ```
-
-</details>
-
-<details>
-<summary><strong>After (결과 리스트 기준)</strong></summary>
+<strong>After (결과 리스트 기준)</strong>
 
 ```js
 const first = fdns[0];
@@ -128,14 +104,9 @@ if (query && first?.toLowerCase().startsWith(query.toLowerCase())) {
 }
 ```
 
-</details>
-
-
-
 ### 4. 불필요한 리플로우 제거
 
-<details>
-<summary><strong>Before</strong></summary>
+<strong>Before</strong>
 
 ```js
 element.style.display = '';
@@ -143,22 +114,15 @@ element.offsetHeight;
 setTimeout(() => { … }, 1);
 setTimeout(() => { … }, 5);
 ```
-
-</details>
-
-<details>
-<summary><strong>After</strong></summary>
+<strong>After</strong>
 
 ```js
 // 모두 제거 – 브라우저가 자동으로 처리
 ```
 
-</details>
-
 ### 5. 상세 정보 모달 + 더미 API 도입 
 
-<details>
-<summary><strong>Before</strong></summary>
+<strong>Before</strong>
 
 ```js
 /* (초기 버전) 검색 결과를 클릭해도 이름 텍스트만 표시
@@ -170,10 +134,7 @@ resultsList.addEventListener('click', e => {
 });
 ```
 
-</details>
-
-<details>
-<summary><strong>After</strong></summary>
+<strong>After</strong>
 
 ```js
 /* 더미 DB(JSON) → fetchPersonDetail()
@@ -200,10 +161,6 @@ resultsList.addEventListener('click', async e => {
 });
 ```
 
-</details>
-
-
-
 ### 6. 이름 데이터 **100 → 100 000** 확장 대응
 | 지표 | 100 개 | **100 k (최적화 전)** | **100 k (최적화 후)** |
 | --- | --- | --- | --- |
@@ -211,8 +168,8 @@ resultsList.addEventListener('click', async e => {
 | 입력 지연 | 7.0 ms | 23.5 ms | **6.96ms** |
 | DOM Nodes | 30 | 100025 | 86 |
 | FPS | 128.2fps | 66.2fps | 14.9fps |
-<details>
-<summary><strong>Before</strong></summary>
+
+<strong>Before</strong>
 
 ```js
 // 입력마다 배열 전체를 순회하며 이름.toLowerCase() 호출 → 10 k 단위에서 끊김
@@ -222,11 +179,7 @@ function nameListQuery(list, q) {
 
 searchInput.addEventListener('input', e => hQuery(e.target.value));
 ```
-
-</details>
-
-<details>
-<summary><strong>After</strong></summary>
+<strong>After</strong>
 
 ```js
 /* 성능 핵심 4줄
@@ -248,25 +201,15 @@ function hQuery(q) {
 searchInput.addEventListener('input', debounce(e => hQuery(e.target.value), 200));
 ```
 
-</details>
-
-
-
 ### 7. 하드코딩 이름 → **외부 CSV + Fallback** 으로 분리
-
-<details>
-<summary><strong>Before</strong></summary>
+<strong>Before</strong>
 
 ```js
 // HTML 안에 100줄 넘는 CSV 문자열 하드코딩
 const csvData = `Alexander,Alice,Amanda,Andrew,…,Willie`;
 const rawNames = csvData.split(',');
 ```
-
-</details>
-
-<details>
-<summary><strong>After</strong></summary>
+<strong>After</strong>
 
 ```js
 const INLINE_CSV = `Alexander,Alice,Amanda,Andrew,…,Willie`.trim();
@@ -288,9 +231,6 @@ async function loadCsv(path = 'names.csv') {
 
 const rawNames = await loadCsv();  // 모듈 스크립트에서 await 가능
 ```
-
-</details>
-
 ---
 
 > 위 세 가지 리팩터링으로 <br>
